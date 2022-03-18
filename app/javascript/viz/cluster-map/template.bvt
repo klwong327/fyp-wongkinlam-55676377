@@ -1,0 +1,58 @@
+svg {
+    width = auto
+    height = 10000
+    @let leafHeight = Math.floor(chartWidth / leavesLength)
+    @let str_x = chartWidth / leavesLength
+    @let line_x = (result.xline_list * str_x) + 10
+    
+    Component {
+        Rows {
+			width = treeWidth + 150;
+			Tree {
+                x = 10
+                y = 10
+				width = chartWidth;
+				height = 180;
+				direction = "bottom"
+				data = result.tree_result
+				:leaf(d) {
+					Rect {
+						anchor = d.tree.leafAnchor(d.leaf)
+						height = leafHeight ; width = 15
+                        
+					}
+				}
+			}
+		}
+        
+        Component {
+            x = 10; y = 190
+            width = chartWidth; height = chartHeight
+            HeatMap {
+                height = 100%; width = 100%
+                data = result.heatData3
+                startColor = startColor
+                endColor = endColor
+            }
+            Rect {
+                x = chartWidth + 50; height = chartHeight; width = legendWidth
+                fill = @gradient("bg"); stroke = "#000"
+            }
+            Axis {
+                yScale = @scale-linear(0, result.max, 0, chartHeight)
+                x = chartWidth + 50 + legendWidth
+                orientation = "right"
+                includeEndTicks = false
+            }
+        }
+           
+        @for index in result.xline_list {
+            @let line_x = (index * str_x) + 10
+            Line {
+                x = line_x ; y1 = 170; y2 = chartHeight + 190
+                strokeWidth = 5
+                stroke = "white"
+            }
+        }   
+    }
+}

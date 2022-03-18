@@ -1,0 +1,102 @@
+svg {
+    width = auto
+    height = 1000
+    //@let len = result.heatData.length
+    Component {
+        //Title
+        
+        
+
+        //Raw Heatmap
+        Component {
+            x = 60; y = 30
+            width = 30; height = 30;
+            Text {
+                text = title
+                anchor = @anchor("top", "center")
+                fontSize = 17
+                //x = 20 + 0.5 * 300
+            }
+
+            Text {
+                text = rLabel
+                anchor = @anchor("middle", "left")
+                x = 20 + 0.5 * 300
+                fontSize = 14
+            }
+
+            HeatMap {
+                height = 300; width = 300;
+                data = raw.heatData
+                startColor = startColor
+                endColor = endColor
+                
+            }
+            
+            //Axis { xScale = @scale-linear(0, len, 0, chartWidth); orientation = "bottom"; y = 100%}
+            //Axis { yScale = @scale-linear(0, len, chartHeight, 0); orientation = "left"}
+            Rect {
+                x = 50; height = 30; width = 30
+                fill = @gradient("bg"); stroke = "#000"
+            }
+            Axis {
+                yScale = @scale-linear(0, raw.max, 0, 300)
+                x = 50 + 30
+                orientation = "right"
+                includeEndTicks = false
+            }
+        }
+
+        //pred heatmap
+        Component {
+            x = 60; y = 350
+            width = 30; height = 30;
+
+            Text {
+                text = pLabel
+                anchor = @anchor("middle", "left")
+                x = 20 + 0.5 * 300
+                fontSize = 14
+            }
+
+            HeatMap{
+                height = 300; width = 300;
+                data = pred
+                startColor = startColor
+                endColor = endColor
+            }
+        }
+
+        //u multiline
+        XYPlot {
+            x = 60; y = 660
+            padding = 20
+            hasPadding = false
+            data = datum
+            dataHandler = {
+                default: {
+                    values: d => d.values,
+                    pos: d => d[0],
+                    min: d => d[1],
+                    value: d => d[1],
+                }
+            }
+            Axis("bottom") { y = 100% }
+            Axis("right") {x = 100%}
+            AxisBackground {orientation = "vertical"}
+            @for (d, index) in datum {
+                Polyline {
+                    key = index
+                    points = @scaled(d.values)
+		    		stroke = d.color
+                    strokeWidth = 2.5
+                }
+            }
+        }
+
+
+        
+
+
+    }
+}

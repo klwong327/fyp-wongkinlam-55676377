@@ -1,0 +1,57 @@
+svg {
+    width = 1500
+    height = 1000
+    Component {
+		@let textWidth = 37.5
+        @let textHeight = 18.75
+		@let x_plot = 15
+		@for (item1, i) in heatDataMain.heatData2 {
+			@for (item2, j) in heatDataMain.heatData2[i] {
+				Rect {
+					x = textWidth * j + 15
+					y = textHeight * i + 7.5
+					height = 18.75; width = 37.5
+					@let value = item2
+					fill = heatDataMain.colors.colors[value]
+					stroke = "white"; strokeWidth = 1.2
+					stage:active {
+						fillOpacity = 0.5
+					}
+					behavior:tooltip {
+						content = value
+    				}
+					on:mouseenter = $el.stage = "active"
+    				on:mouseleave = $el.stage = null
+				}
+			}	
+       	}
+		@let x_axis = heatDataMain.x_axis
+        @let y_axis = heatDataMain.y_axis	
+        @for (item, index) in y_axis {
+            Text{
+                text = item
+                y = index * 18.75 + 11.25
+                x = textWidth * x_axis.length + 25
+                fontSize = 12
+                anchor = @anchor("top", "left")
+            }
+        }
+		@for (item, index) in x_axis {
+            Text{
+                text = item
+                fontSize = 12
+                rotation = @rotate(90)
+                x = index * 37.5 + 39
+                y = textHeight * y_axis.length + 15
+            }
+        }
+        Legend {
+        	x = textWidth * x_axis.length + 180
+			y = 7.5
+			padding = 6
+			title = heatDataMain.y_axis[0]
+			lineHeight = 14
+         	data = heatDataMain.colors.legendData()
+     	}
+	}
+}
